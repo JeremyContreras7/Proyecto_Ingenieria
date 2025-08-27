@@ -1,0 +1,117 @@
+/* --- Reset básico --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* --- Fondo --- */
+body {
+    background: linear-gradient(135deg, #38ada9, #2e86de); /* Verde/Azul invertido para diferenciar de login */
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* --- Contenedor principal --- */
+#page-wrapper {
+    background: #fff;
+    padding: 40px;
+    border-radius: 20px;
+    width: 380px;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25);
+    text-align: center;
+}
+
+/* --- Logo --- */
+#page-wrapper img {
+    width: 90px;
+    margin-bottom: 20px;
+}
+
+/* --- Título --- */
+#page-wrapper h1 {
+    font-size: 1.6rem;
+    margin-bottom: 25px;
+    color: #38ada9;
+}
+
+/* --- Inputs y Selects --- */
+.cajaentradatexto,
+select {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 14px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.cajaentradatexto:focus,
+select:focus {
+    border-color: #38ada9;
+    box-shadow: 0 0 6px rgba(56, 173, 169, 0.5);
+    background: #f9fdfd;
+}
+
+/* --- Select (rol y tipo encargado) --- */
+select {
+    background: #f8f8f8;
+    cursor: pointer;
+}
+
+/* --- Botón de enviar --- */
+.botonenviar {
+    width: 100%;
+    padding: 12px;
+    background: #38ada9;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 10px;
+}
+
+.botonenviar:hover {
+    background: #218c74;
+}
+
+/* --- Checkbox mostrar contraseña --- */
+#mostrarC {
+    font-size: 13px;
+    margin-top: 5px;
+    color: #555;
+}
+
+/* --- Animación de aparición --- */
+#page-wrapper {
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Botón para volver al login --- */
+.botonvolver {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-top: 15px;
+    background: #2e86de;
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.botonvolver:hover {
+    background: #1b4f72;
+}
