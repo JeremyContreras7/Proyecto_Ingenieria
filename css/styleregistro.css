@@ -1,117 +1,91 @@
-/* --- Reset básico --- */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-}
+ body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f3f4f6;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
 
-/* --- Fondo --- */
-body {
-    background: linear-gradient(135deg, #38ada9, #2e86de); /* Verde/Azul invertido para diferenciar de login */
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+        /* Contenedor central */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 60px;
+        }
 
-/* --- Contenedor principal --- */
-#page-wrapper {
-    background: #fff;
-    padding: 40px;
-    border-radius: 20px;
-    width: 380px;
-    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25);
-    text-align: center;
-}
+        /* Título */
+        h1 {
+            color: #1f2937;
+            font-size: 26px;
+            margin-bottom: 20px;
+        }
 
-/* --- Logo --- */
-#page-wrapper img {
-    width: 90px;
-    margin-bottom: 20px;
-}
+        /* Caja del formulario */
+        form {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 8px 20px rgba(0,0,0,0.1);
+            width: 360px;
+            transition: transform 0.3s ease;
+        }
 
-/* --- Título --- */
-#page-wrapper h1 {
-    font-size: 1.6rem;
-    margin-bottom: 25px;
-    color: #38ada9;
-}
+        form:hover {
+            transform: translateY(-3px);
+        }
 
-/* --- Inputs y Selects --- */
-.cajaentradatexto,
-select {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    font-size: 14px;
-    outline: none;
-    transition: 0.3s;
-}
+        /* Inputs */
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            margin: 12px 0;
+            border-radius: 10px;
+            border: 1px solid #d1d5db;
+            background: #f9fafb;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
 
-.cajaentradatexto:focus,
-select:focus {
-    border-color: #38ada9;
-    box-shadow: 0 0 6px rgba(56, 173, 169, 0.5);
-    background: #f9fdfd;
-}
+        input:focus, select:focus {
+            border-color: #2563eb;
+            background: #fff;
+            outline: none;
+            box-shadow: 0px 0px 6px rgba(37,99,235,0.3);
+        }
 
-/* --- Select (rol y tipo encargado) --- */
-select {
-    background: #f8f8f8;
-    cursor: pointer;
-}
+        /* Botón */
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #2563eb;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
 
-/* --- Botón de enviar --- */
-.botonenviar {
-    width: 100%;
-    padding: 12px;
-    background: #38ada9;
-    border: none;
-    border-radius: 10px;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-    transition: 0.3s;
-    margin-top: 10px;
-}
+        button:hover {
+            background: #1e40af;
+            transform: scale(1.03);
+        }
 
-.botonenviar:hover {
-    background: #218c74;
-}
+        /* Mensajes */
+        p {
+            margin-top: 15px;
+            font-weight: bold;
+            text-align: center;
+            color: #1f2937;
+        }
 
-/* --- Checkbox mostrar contraseña --- */
-#mostrarC {
-    font-size: 13px;
-    margin-top: 5px;
-    color: #555;
-}
-
-/* --- Animación de aparición --- */
-#page-wrapper {
-    animation: fadeIn 0.8s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* --- Botón para volver al login --- */
-.botonvolver {
-    display: inline-block;
-    padding: 10px 20px;
-    margin-top: 15px;
-    background: #2e86de;
-    color: white;
-    text-decoration: none;
-    border-radius: 10px;
-    font-size: 14px;
-    transition: 0.3s;
-}
-
-.botonvolver:hover {
-    background: #1b4f72;
-}
+        /* Responsivo */
+        @media (max-width: 420px) {
+            form {
+                width: 90%;
+                padding: 20px;
+            }
+        }

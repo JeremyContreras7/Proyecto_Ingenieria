@@ -9,6 +9,7 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
     <title>Gestión de Licencias - Inicio de Sesión</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="icon" href="img/logo.png">
     <link rel="stylesheet" href="css/stylelogin.css" />
 </head>
 
@@ -31,13 +32,13 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
 
                 <select name="rol" required>
                     <option disabled selected value="">Seleccionar Rol</option>
-                    <option value="ADMIN">Administrador</option>
+                    <option value="ADMIN">Administrador Central</option>
                     <option value="ENCARGADO">Encargado de Establecimiento</option>
                 </select>
 
                 <button type="submit" class="botonenviar" name="btnloginx">Iniciar Sesión</button>
             </form>
-             <!-- Botón para ir a Registro -->
+
             <p style="margin-top: 15px;">¿No tienes cuenta?</p>
             <a href="registrar.php" class="botonregistro">Crear una cuenta</a>
         </center>
