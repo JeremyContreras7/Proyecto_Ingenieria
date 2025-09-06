@@ -24,7 +24,7 @@
 
             <input type="text" name="establecimiento" placeholder="Establecimiento" required><br>
 
-            <!-- Tipo de Encargado (solo si es USUARIO) -->
+            <!-- Selección de Tipo de Encargado -->
             <select name="tipo_encargado" id="tipo_encargado" disabled>
                 <option disabled selected>Tipo de Encargado</option>
                 <option value="INFORMATICA">Informática</option>
@@ -39,18 +39,17 @@
     </center>
 
     <script>
-        // Activa o desactiva el campo "tipo_encargado"
         function toggleEncargado() {
             let rol = document.getElementById("rol").value;
             let encargadoSelect = document.getElementById("tipo_encargado");
 
             if (rol === "USUARIO") {
-                encargadoSelect.disabled = false;
+                encargadoSelect.disabled = false; // Se activa
                 encargadoSelect.required = true;
             } else {
-                encargadoSelect.disabled = true;
+                encargadoSelect.disabled = true;  // Se desactiva
                 encargadoSelect.required = false;
-                encargadoSelect.selectedIndex = 0;
+                encargadoSelect.selectedIndex = 0; // Vuelve a opción por defecto
             }
         }
     </script>
@@ -58,48 +57,24 @@
 </html>
 
 <?php
-// =========================
-// 🔹 Conexión con PDO
-// =========================
-$host = "localhost";
-$dbname = "gestion_licencias";
-$usuario = "root";   // Usuario por defecto en XAMPP
-$password = "";      // Contraseña vacía en XAMPP
+// Lógica de registro
+include("conexion.php"); // asegúrate de tener tu conexión aquí
 
-try {
-    $conexion = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $usuario, $password);
-    $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    // echo "✅ Conexión exitosa a la base de datos";
-} catch (PDOException $e) {
-    die("❌ Error en la conexión: " . $e->getMessage());
-}
-
-// =========================
-// 🔹 Lógica de Registro
-// =========================
 if (isset($_POST['btnregistrar'])) {
     $nombre = $_POST['nombre'];
     $correo = $_POST['correo'];
     $pass = password_hash($_POST['pass'], PASSWORD_DEFAULT);
     $rol = $_POST['rol'];
     $establecimiento = $_POST['establecimiento'];
-    $tipo_encargado = ($rol === "USUARIO") ? $_POST['tipo_encargado'] : null;
+    $tipo_encargado = ($_POST['rol'] === "USUARIO") ? $_POST['tipo_encargado'] : null;
 
-    try {
-        $sql = "INSERT INTO usuarios (nombre, correo, pass, rol, establecimiento, tipo_encargado) 
-                VALUES (:nombre, :correo, :pass, :rol, :establecimiento, :tipo_encargado)";
-        $stmt = $conexion->prepare($sql);
-        $stmt->bindParam(':nombre', $nombre);
-        $stmt->bindParam(':correo', $correo);
-        $stmt->bindParam(':pass', $pass);
-        $stmt->bindParam(':rol', $rol);
-        $stmt->bindParam(':establecimiento', $establecimiento);
-        $stmt->bindParam(':tipo_encargado', $tipo_encargado);
+    $sql = "INSERT INTO usuarios (nombre, correo, pass, rol, establecimiento, tipo_encargado) 
+            VALUES ('$nombre','$correo','$pass','$rol','$establecimiento','$tipo_encargado')";
 
-        $stmt->execute();
-        echo "<p style='color:green; text-align:center;'>✅ Usuario registrado correctamente.</p>";
-    } catch (PDOException $e) {
-        echo "<p style='color:red; text-align:center;'>❌ Error: " . $e->getMessage() . "</p>";
+    if ($conexion->query($sql) === TRUE) {
+        echo "<p>✅ Usuario registrado correctamente.</p>";
+    } else {
+        echo "<p>❌ Error: " . $conexion->error . "</p>";
     }
 }
 ?>

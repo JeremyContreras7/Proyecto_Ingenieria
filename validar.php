@@ -1,75 +1,95 @@
 <?php
-include('conexion.php'); // conexión PostgreSQL
-
 session_start();
+include('conexion.php'); // aquí defines $host, $dbname, $usuario, $password
 
-// Recibir datos del formulario
-$correo   = $_POST["txtusuario"] ?? '';
-$pass     = $_POST["txtpassword"] ?? '';
-$nombre   = $_POST["txtnombre"] ?? '';
-$rol      = $_POST["rol"] ?? '';
-$establecimiento = $_POST["establecimiento"] ?? '';
-$tipo_encargado  = $_POST["tipo_encargado"] ?? '';
+// =========================
+// 🔹 Conexión PDO
+// =========================
+try {
+    $conexion = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $usuario, $password);
+    $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("❌ Error en la conexión: " . $e->getMessage());
+}
 
-// ----------- LOGIN -----------
-if (isset($_POST["btnloginx"])) {
-    $sql = "SELECT * FROM usuarios WHERE correo = :correo AND nombre = :nombre AND rol = :rol";
+// =========================
+// 🔹 LOGIN
+// =========================
+if (isset($_POST['btnloginx'])) {
+    $correo = $_POST['txtusuario'];
+    $pass = $_POST['txtpassword'];
+    $rol   = $_POST['rol'];
+
+    $sql = "SELECT * FROM usuarios WHERE correo = :correo AND rol = :rol LIMIT 1";
     $stmt = $conexion->prepare($sql);
-    $stmt->execute([
-        ':correo' => $correo,
-        ':nombre' => $nombre,
-        ':rol'    => $rol
-    ]);
+    $stmt->bindParam(':correo', $correo);
+    $stmt->bindParam(':rol', $rol);
+    $stmt->execute();
 
     $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($usuario && password_verify($pass, $usuario['pass'])) {
-        $_SESSION['correo'] = $usuario['correo'];
-        $_SESSION['nombre'] = $usuario['nombre'];
-        $_SESSION['rol']    = $usuario['rol'];
-        $_SESSION['establecimiento'] = $usuario['establecimiento'];
-        $_SESSION['tipo_encargado']  = $usuario['tipo_encargado'];
+        $_SESSION['id_usuario']     = $usuario['id'];
+        $_SESSION['nombre']         = $usuario['nombre'];
+        $_SESSION['rol']            = $usuario['rol'];
+        $_SESSION['establecimiento']= $usuario['establecimiento'];
+        $_SESSION['tipo_encargado'] = $usuario['tipo_encargado'];
 
-        // Redirigir al menú principal
-        header("Location: menu.php");
+        // Redirigir según rol
+        if ($rol === "ADMIN") {
+            header("Location: menu.php");
+        } elseif ($rol === "ENCARGADO") {
+            header("Location: menu_encargado.php");
+        } elseif ($rol === "USUARIO") {
+            header("Location: menu_usuario.php");
+        }
         exit();
     } else {
-        echo "<script>alert('Credenciales incorrectas o rol no válido'); window.location='index.php';</script>";
+        echo "<script>alert('❌ Credenciales incorrectas.'); window.location='index.php';</script>";
     }
 }
 
-// ----------- REGISTRO DE USUARIO -----------
-if (isset($_POST["btnregistrarx"])) {
-    // Verificar si el correo ya existe
-    $sqlCheck = "SELECT 1 FROM usuarios WHERE correo = :correo";
-    $stmtCheck = $conexion->prepare($sqlCheck);
-    $stmtCheck->execute([':correo' => $correo]);
+// =========================
+// 🔹 REGISTRO DE NUEVOS USUARIOS
+// =========================
+if (isset($_POST['btnregistrarx'])) {
+    $nombre        = $_POST['nombre'];
+    $correo        = $_POST['correo'];
+    $pass          = $_POST['pass'];
+    $rol           = $_POST['rol'];
+    $establecimiento = $_POST['establecimiento'];
+    $tipo_encargado  = ($_POST['rol'] === "USUARIO") ? $_POST['tipo_encargado'] : null;
 
-    if ($stmtCheck->fetch()) {
-        echo "<script>alert('El correo ya está registrado: $correo'); window.location='registrar.php';</script>";
-        exit();
-    }
+    // Verificar si ya existe el correo
+    $sql = "SELECT COUNT(*) FROM usuarios WHERE correo = :correo";
+    $stmt = $conexion->prepare($sql);
+    $stmt->bindParam(':correo', $correo);
+    $stmt->execute();
+    $existe = $stmt->fetchColumn();
 
-    // Registrar usuario
-    $pass_segura = password_hash($pass, PASSWORD_BCRYPT);
-    $sqlInsert = "INSERT INTO usuarios 
-                  (correo, pass, nombre, rol, establecimiento, tipo_encargado) 
-                  VALUES (:correo, :pass, :nombre, :rol, :establecimiento, :tipo_encargado)";
-    $stmtInsert = $conexion->prepare($sqlInsert);
+    if ($existe == 0) {
+        $pass_segura = password_hash($pass, PASSWORD_BCRYPT);
 
-    $ok = $stmtInsert->execute([
-        ':correo' => $correo,
-        ':pass' => $pass_segura,
-        ':nombre' => $nombre,
-        ':rol' => $rol,
-        ':establecimiento' => $establecimiento,
-        ':tipo_encargado' => $tipo_encargado
-    ]);
+        $sql = "INSERT INTO usuarios (nombre, correo, pass, rol, establecimiento, tipo_encargado) 
+                VALUES (:nombre, :correo, :pass, :rol, :establecimiento, :tipo_encargado)";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bindParam(':nombre', $nombre);
+        $stmt->bindParam(':correo', $correo);
+        $stmt->bindParam(':pass', $pass_segura);
+        $stmt->bindParam(':rol', $rol);
+        $stmt->bindParam(':establecimiento', $establecimiento);
+        $stmt->bindParam(':tipo_encargado', $tipo_encargado);
 
-    if ($ok) {
-        echo "<script>alert('Usuario registrado correctamente: $nombre - $establecimiento'); window.location='index.php';</script>";
+        if ($stmt->execute()) {
+            echo "<script>alert('✅ Usuario registrado correctamente: $nombre - $establecimiento'); window.location='registrar.php';</script>";
+        } else {
+            echo "<script>alert('❌ Error al registrar el usuario.'); window.location='registrar.php';</script>";
+        }
     } else {
-        echo "<script>alert('Error al registrar el usuario'); window.location='registrar.php';</script>";
+        echo "<script>alert('⚠️ El correo ya está registrado: $correo'); window.location='registrar.php';</script>";
     }
 }
+$_SESSION['establecimiento'] = $usuario['establecimiento'];
+$_SESSION['rol'] = $usuario['rol'];
+
 ?>
